@@ -1,0 +1,29 @@
+# Virtual environment
+shop/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Django
+*.log
+db.sqlite3
+staticfiles/
+
+# Environment variables
+.env
+
+# Media uploads
+media/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store

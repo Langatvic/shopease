@@ -1,0 +1,20 @@
+<div class="card h-100 shadow-sm">
+  {% if product.image %}
+    <img src="{{ product.image.url }}" class="card-img-top" style="height:180px;object-fit:cover;" alt="{{ product.name }}">
+  {% else %}
+    <div class="bg-light d-flex align-items-center justify-content-center" style="height:180px;">No image</div>
+  {% endif %}
+  <div class="card-body d-flex flex-column">
+    <h6 class="card-title">{{ product.name }}</h6>
+    <p class="text-muted small mb-1">{{ product.category.name }}</p>
+    <p class="fw-bold text-primary mb-2">${{ product.price }}</p>
+    <div class="mt-auto d-flex justify-content-between">
+      <a href="{% url 'store:product_detail' product.slug %}" class="btn btn-sm btn-outline-secondary">View</a>
+      <form method="post" action="{% url 'cart:add' product.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="quantity" value="1">
+        <button class="btn btn-sm btn-primary" {% if not product.in_stock %}disabled{% endif %}>Add</button>
+      </form>
+    </div>
+  </div>
+</div>

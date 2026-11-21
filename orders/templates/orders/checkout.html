@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<h2>Checkout</h2>
+<div class="row">
+  <div class="col-md-7">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h5>Shipping Details</h5>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button class="btn btn-success w-100" type="submit">Place Order</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5>Order Summary</h5>
+        <ul class="list-group list-group-flush">
+          {% for item in cart.items.all %}
+            <li class="list-group-item d-flex justify-content-between">
+              <span>{{ item.product.name }} × {{ item.quantity }}</span>
+              <span>${{ item.subtotal }}</span>
+            </li>
+          {% endfor %}
+          <li class="list-group-item d-flex justify-content-between fw-bold">
+            <span>Total</span><span>${{ cart.total }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

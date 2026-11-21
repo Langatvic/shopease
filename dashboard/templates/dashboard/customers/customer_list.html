@@ -1,0 +1,12 @@
+{% extends 'base_admin.html' %}
+{% block content %}
+<h2>Customers</h2>
+<table class="table">
+  <thead><tr><th>Username</th><th>Email</th><th>Phone</th><th>Orders</th></tr></thead>
+  <tbody>
+    {% for c in customers %}
+    <tr><td>{{ c.username }}</td><td>{{ c.email }}</td><td>{{ c.phone }}</td><td>{{ c.order_count }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

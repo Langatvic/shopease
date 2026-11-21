@@ -1,0 +1,23 @@
+{% extends 'base_admin.html' %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h2>Products</h2>
+  <a href="{% url 'dashboard:product_create' %}" class="btn btn-primary">+ New Product</a>
+</div>
+<table class="table">
+  <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Active</th><th></th></tr></thead>
+  <tbody>
+    {% for p in products %}
+    <tr>
+      <td>{{ p.name }}</td><td>{{ p.category.name }}</td>
+      <td>${{ p.price }}</td><td>{{ p.stock }}</td>
+      <td>{{ p.is_active|yesno:"✅,❌" }}</td>
+      <td>
+        <a href="{% url 'dashboard:product_edit' p.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+        <a href="{% url 'dashboard:product_delete' p.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

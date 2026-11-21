@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-5">
+    {% if product.image %}
+      <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+    {% else %}
+      <div class="bg-light d-flex align-items-center justify-content-center" style="height:400px;">No image</div>
+    {% endif %}
+  </div>
+  <div class="col-md-7">
+    <h2>{{ product.name }}</h2>
+    <p class="text-muted">{{ product.category.name }}</p>
+    <h3 class="text-primary">${{ product.price }}</h3>
+    <p>{{ product.description }}</p>
+    <p>{% if product.in_stock %}<span class="badge bg-success">In stock ({{ product.stock }})</span>
+       {% else %}<span class="badge bg-danger">Out of stock</span>{% endif %}</p>
+    <form method="post" action="{% url 'cart:add' product.id %}">
+      {% csrf_token %}
+      <div class="input-group mb-3" style="max-width:200px;">
+        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control">
+        <button class="btn btn-primary" {% if not product.in_stock %}disabled{% endif %}>Add to Cart</button>
+      </div>
+    </form>
+  </div>
+</div>
+<hr>
+<h4>Related Products</h4>
+<div class="row g-3">
+  {% for p in related %}
+    <div class="col-sm-6 col-lg-3">{% include 'includes/product_card.html' with product=p %}</div>
+  {% empty %}
+    <p class="text-muted">No related products.</p>
+  {% endfor %}
+</div>
+{% endblock %}

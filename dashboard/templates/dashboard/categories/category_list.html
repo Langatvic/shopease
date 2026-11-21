@@ -1,0 +1,12 @@
+{% extends 'base_admin.html' %}
+{% block content %}
+<h2>Categories</h2>
+<ul class="list-group">
+  {% for c in categories %}
+    <li class="list-group-item d-flex justify-content-between">
+      <span>{{ c.name }}</span>
+      <span class="badge bg-primary">{{ c.products.count }} products</span>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

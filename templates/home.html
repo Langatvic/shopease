@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}ShopEase — Home{% endblock %}
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3">
+  <h1 class="display-5 fw-bold">Welcome to ShopEase</h1>
+  <p class="fs-5">Quality products, delivered to your door.</p>
+  <a href="{% url 'store:product_list' %}" class="btn btn-primary btn-lg">Shop Now</a>
+</div>
+<h3>Featured Products</h3>
+<div class="row g-3">
+  {% for product in featured %}
+    <div class="col-sm-6 col-lg-3">{% include 'includes/product_card.html' %}</div>
+  {% empty %}
+    <p>No products yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

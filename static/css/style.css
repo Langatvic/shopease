@@ -1,0 +1,4 @@
+body { background: #f8f9fa; }
+.card { transition: transform .15s ease; }
+.card:hover { transform: translateY(-2px); }
+.navbar-brand { font-weight: 700; letter-spacing: .5px; }

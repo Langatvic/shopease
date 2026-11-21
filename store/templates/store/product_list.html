@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<div class="row">
+  <aside class="col-md-3 mb-4">
+    <h5>Categories</h5>
+    <ul class="list-group">
+      <li class="list-group-item {% if not selected_category %}active{% endif %}">
+        <a class="stretched-link text-decoration-none" href="{% url 'store:product_list' %}">All</a>
+      </li>
+      {% for cat in categories %}
+        <li class="list-group-item {% if selected_category == cat.slug %}active{% endif %}">
+          <a class="stretched-link text-decoration-none" href="?category={{ cat.slug }}">{{ cat.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </aside>
+  <section class="col-md-9">
+    <form class="mb-4 d-flex" method="get">
+      <input type="text" name="q" value="{{ query }}" class="form-control me-2" placeholder="Search products...">
+      <button class="btn btn-outline-primary">Search</button>
+    </form>
+    <div class="row g-3">
+      {% for product in products %}
+        <div class="col-sm-6 col-lg-4">
+          {% include 'includes/product_card.html' %}
+        </div>
+      {% empty %}
+        <p>No products found.</p>
+      {% endfor %}
+    </div>
+    {% include 'includes/pagination.html' with page_obj=products %}
+  </section>
+</div>
+{% endblock %}

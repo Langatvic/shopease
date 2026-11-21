@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Payment Method</h2>
+<p>Order <strong>{{ order.order_number }}</strong> — Total ${{ order.total_amount }}</p>
+<form method="post">
+  {% csrf_token %}
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="method" value="cod" id="cod" checked>
+    <label class="form-check-label" for="cod">Cash on Delivery</label>
+  </div>
+  <button class="btn btn-primary mt-3">Confirm</button>
+</form>
+{% endblock %}

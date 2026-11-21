@@ -1,0 +1,18 @@
+{% extends 'base_admin.html' %}
+{% block content %}
+<h2>Stock Log</h2>
+<table class="table">
+  <thead><tr><th>Date</th><th>Product</th><th>Type</th><th>Qty</th><th>Reason</th></tr></thead>
+  <tbody>
+    {% for log in logs %}
+    <tr>
+      <td>{{ log.created_at }}</td>
+      <td>{{ log.product.name }}</td>
+      <td><span class="badge bg-{{ log.change_type|yesno:'success,danger' }}">{{ log.get_change_type_display }}</span></td>
+      <td>{{ log.quantity }}</td>
+      <td>{{ log.reason }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
