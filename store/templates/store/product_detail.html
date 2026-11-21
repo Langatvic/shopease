@@ -1,37 +1,69 @@
 {% extends 'base.html' %}
-{% block title %}{{ product.name }}{% endblock %}
+{% block title %}{{ product.name }} | ShopEase{% endblock %}
 {% block content %}
-<div class="row">
-  <div class="col-md-5">
-    {% if product.image %}
-      <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
-    {% else %}
-      <div class="bg-light d-flex align-items-center justify-content-center" style="height:400px;">No image</div>
+<nav class="crumbs" aria-label="Breadcrumb">
+  <a href="{% url 'store:home' %}">Home</a><i class="bi bi-chevron-right"></i>
+  <a href="{% url 'store:product_list' %}">Shop</a><i class="bi bi-chevron-right"></i>
+  <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a><i class="bi bi-chevron-right"></i>
+  <span aria-current="page">{{ product.name }}</span>
+</nav>
+
+<div class="row g-5 align-items-start">
+  <div class="col-md-6">
+    <div class="detail-media ratio ratio-1x1" id="detail-main">
+      {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+      {% else %}
+        <span class="no-img"><i class="bi bi-image"></i></span>
+      {% endif %}
+    </div>
+    {% if product.images.all %}
+    <div class="thumbs" data-gallery="#detail-main">
+      {% if product.image %}
+        <button type="button" class="is-active" data-src="{{ product.image.url }}" aria-label="Show main photo"><img src="{{ product.image.url }}" alt=""></button>
+      {% endif %}
+      {% for img in product.images.all %}
+        <button type="button" data-src="{{ img.image.url }}" aria-label="Show photo {{ forloop.counter }}"><img src="{{ img.image.url }}" alt=""></button>
+      {% endfor %}
+    </div>
     {% endif %}
   </div>
-  <div class="col-md-7">
-    <h2>{{ product.name }}</h2>
-    <p class="text-muted">{{ product.category.name }}</p>
-    <h3 class="text-primary">${{ product.price }}</h3>
-    <p>{{ product.description }}</p>
-    <p>{% if product.in_stock %}<span class="badge bg-success">In stock ({{ product.stock }})</span>
-       {% else %}<span class="badge bg-danger">Out of stock</span>{% endif %}</p>
-    <form method="post" action="{% url 'cart:add' product.id %}">
+
+  <div class="col-md-6">
+    <a class="detail-cat" href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
+    <h1 class="detail-title">{{ product.name }}</h1>
+    <p class="detail-price">${{ product.price }}</p>
+    {% if product.in_stock %}
+      <span class="status status-ok">In stock ({{ product.stock }} left)</span>
+    {% else %}
+      <span class="status status-out">Out of stock</span>
+    {% endif %}
+    {% if product.description %}<p class="detail-desc">{{ product.description|linebreaksbr }}</p>{% endif %}
+
+    <form method="post" action="{% url 'cart:add' product.id %}" class="mt-4">
       {% csrf_token %}
-      <div class="input-group mb-3" style="max-width:200px;">
-        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control">
-        <button class="btn btn-primary" {% if not product.in_stock %}disabled{% endif %}>Add to Cart</button>
+      <div class="buy-row">
+        <label class="visually-hidden" for="qty">Quantity</label>
+        <input id="qty" type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control qty" {% if not product.in_stock %}disabled{% endif %}>
+        <button class="btn btn-primary btn-lg" type="submit" {% if not product.in_stock %}disabled{% endif %}><i class="bi bi-bag-plus me-2"></i>Add to cart</button>
       </div>
     </form>
+
+    <ul class="perks">
+      <li><i class="bi bi-truck"></i>Delivered to your door</li>
+      <li><i class="bi bi-cash-coin"></i>Pay in cash when it arrives</li>
+    </ul>
   </div>
 </div>
-<hr>
-<h4>Related Products</h4>
-<div class="row g-3">
-  {% for p in related %}
-    <div class="col-sm-6 col-lg-3">{% include 'includes/product_card.html' with product=p %}</div>
-  {% empty %}
-    <p class="text-muted">No related products.</p>
-  {% endfor %}
-</div>
+
+{% if related %}
+<section class="mt-5 pt-4">
+  <h2 class="section-title mb-4" style="font-size:1.5rem;">You may also like</h2>
+  <div class="row g-3 g-lg-4">
+    {% for p in related %}
+      <div class="col-6 col-lg-3">{% include 'includes/product_card.html' with product=p %}</div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
 {% endblock %}

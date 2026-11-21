@@ -1,4 +1,10 @@
 {% extends 'base.html' %}
+{% block title %}Logged out | ShopEase{% endblock %}
 {% block content %}
-<div class="alert alert-info">You have been logged out. <a href="{% url 'accounts:login' %}">Login again</a></div>
+<div class="notice">
+  <div class="notice-icon info"><i class="bi bi-box-arrow-right"></i></div>
+  <h1>You have been logged out</h1>
+  <p>Thanks for visiting. Log in again any time to see your orders.</p>
+  <a href="{% url 'accounts:login' %}" class="btn btn-primary mt-3">Log in again</a>
+</div>
 {% endblock %}

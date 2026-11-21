@@ -1,20 +1,22 @@
-<div class="card h-100 shadow-sm">
-  {% if product.image %}
-    <img src="{{ product.image.url }}" class="card-img-top" style="height:180px;object-fit:cover;" alt="{{ product.name }}">
-  {% else %}
-    <div class="bg-light d-flex align-items-center justify-content-center" style="height:180px;">No image</div>
-  {% endif %}
-  <div class="card-body d-flex flex-column">
-    <h6 class="card-title">{{ product.name }}</h6>
-    <p class="text-muted small mb-1">{{ product.category.name }}</p>
-    <p class="fw-bold text-primary mb-2">${{ product.price }}</p>
-    <div class="mt-auto d-flex justify-content-between">
-      <a href="{% url 'store:product_detail' product.slug %}" class="btn btn-sm btn-outline-secondary">View</a>
+<article class="product-card">
+  <a href="{% url 'store:product_detail' product.slug %}" class="product-media ratio ratio-1x1" aria-label="View {{ product.name }}">
+    {% if product.image %}
+      <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+    {% else %}
+      <span class="no-img"><i class="bi bi-image"></i></span>
+    {% endif %}
+    {% if not product.in_stock %}<span class="stock-flag">Out of stock</span>{% endif %}
+  </a>
+  <div class="product-body">
+    <p class="product-cat">{{ product.category.name }}</p>
+    <h3 class="product-name"><a href="{% url 'store:product_detail' product.slug %}">{{ product.name }}</a></h3>
+    <div class="product-foot">
+      <span class="product-price">${{ product.price }}</span>
       <form method="post" action="{% url 'cart:add' product.id %}">
         {% csrf_token %}
         <input type="hidden" name="quantity" value="1">
-        <button class="btn btn-sm btn-primary" {% if not product.in_stock %}disabled{% endif %}>Add</button>
+        <button class="btn-add" type="submit" aria-label="Add {{ product.name }} to cart" {% if not product.in_stock %}disabled{% endif %}><i class="bi bi-plus-lg"></i></button>
       </form>
     </div>
   </div>
-</div>
+</article>

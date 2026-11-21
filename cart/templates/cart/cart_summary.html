@@ -1,6 +1,5 @@
-<div class="card">
-  <div class="card-body">
-    <h5 class="card-title">Cart Summary</h5>
-    <p>Items: {{ cart.count }} | Total: ${{ cart.total }}</p>
-  </div>
+<div class="panel panel-pad">
+  <h2 class="panel-title">Cart summary</h2>
+  <div class="summary-line"><span class="muted">Items</span><span>{{ cart.count }}</span></div>
+  <div class="summary-line summary-total"><span>Total</span><span>${{ cart.total }}</span></div>
 </div>

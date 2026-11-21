@@ -1,5 +1,11 @@
 {% extends 'base_admin.html' %}
+{% block title %}Inventory{% endblock %}
+{% block heading %}Inventory{% endblock %}
 {% block content %}
-<h2>Inventory Overview</h2>
-<p><a href="{% url 'inventory:stock_list' %}" class="btn btn-primary">Go to Inventory</a></p>
+<div class="empty">
+  <i class="bi bi-clipboard-data"></i>
+  <h2>Manage your stock</h2>
+  <p>See what is running low and restock products from the inventory page.</p>
+  <a href="{% url 'inventory:stock_list' %}" class="btn btn-primary">Go to inventory</a>
+</div>
 {% endblock %}

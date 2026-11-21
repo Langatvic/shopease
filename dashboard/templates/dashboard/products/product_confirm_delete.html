@@ -1,9 +1,15 @@
 {% extends 'base_admin.html' %}
+{% block title %}Delete product{% endblock %}
+{% block heading %}Delete product{% endblock %}
 {% block content %}
-<h2>Delete {{ product.name }}?</h2>
-<form method="post">
-  {% csrf_token %}
-  <button class="btn btn-danger">Yes, Delete</button>
-  <a href="{% url 'dashboard:product_list' %}" class="btn btn-secondary">Cancel</a>
-</form>
+<div class="panel panel-pad" style="max-width: 520px;">
+  <div class="notice-icon warn" style="margin-left:0;"><i class="bi bi-exclamation-triangle"></i></div>
+  <h2 class="panel-title" style="font-size:1.3rem;">Delete "{{ product.name }}"?</h2>
+  <p class="muted">This removes the product from your store. This cannot be undone.</p>
+  <form method="post" class="d-flex gap-2">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">Yes, delete</button>
+    <a href="{% url 'dashboard:product_list' %}" class="btn btn-outline-secondary">Cancel</a>
+  </form>
+</div>
 {% endblock %}

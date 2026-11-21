@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block body_class %}auth-page{% endblock %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block main %}
+<main class="auth">
+  <section class="auth-form-side">
+    <div class="auth-form-wrap">
+      <a class="brand" href="{% url 'store:home' %}"><span class="brand-mark"><i class="bi bi-bag-heart-fill"></i></span>ShopEase</a>
+      {% block auth_content %}{% endblock %}
+      <p class="auth-foot">&copy; {% now "Y" %} ShopEase. All rights reserved.</p>
+    </div>
+  </section>
+  <aside class="auth-visual" aria-hidden="true">
+    <div class="auth-visual-copy">
+      <h2>Everything you need, delivered.</h2>
+      <p>Create an account to check out faster and keep track of your orders.</p>
+    </div>
+  </aside>
+</main>
+{% endblock %}

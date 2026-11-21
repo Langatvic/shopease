@@ -1,18 +1,25 @@
 {% extends 'base_admin.html' %}
+{% block title %}Stock log{% endblock %}
+{% block heading %}Stock log{% endblock %}
 {% block content %}
-<h2>Stock Log</h2>
-<table class="table">
-  <thead><tr><th>Date</th><th>Product</th><th>Type</th><th>Qty</th><th>Reason</th></tr></thead>
-  <tbody>
-    {% for log in logs %}
-    <tr>
-      <td>{{ log.created_at }}</td>
-      <td>{{ log.product.name }}</td>
-      <td><span class="badge bg-{{ log.change_type|yesno:'success,danger' }}">{{ log.get_change_type_display }}</span></td>
-      <td>{{ log.quantity }}</td>
-      <td>{{ log.reason }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="panel">
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Product</th><th>Type</th><th class="num">Qty</th><th>Reason</th></tr></thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td>{{ log.created_at|date:"M d, Y H:i" }}</td>
+          <td>{{ log.product.name }}</td>
+          <td><span class="status status-{{ log.change_type }}">{{ log.get_change_type_display }}</span></td>
+          <td class="num">{{ log.quantity }}</td>
+          <td>{{ log.reason|default:"-" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center muted py-5">No stock changes recorded yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

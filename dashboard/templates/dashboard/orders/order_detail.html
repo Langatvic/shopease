@@ -1,18 +1,35 @@
 {% extends 'base_admin.html' %}
+{% block title %}Order {{ order.order_number }}{% endblock %}
+{% block heading %}Order {{ order.order_number }}{% endblock %}
 {% block content %}
-<h2>Order {{ order.order_number }}</h2>
-<p><strong>Customer:</strong> {{ order.user.username }}</p>
-<p><strong>Status:</strong> {{ order.get_status_display }}</p>
-<a href="{% url 'dashboard:order_status_update' order.order_number %}" class="btn btn-primary mb-3">Update Status</a>
-<table class="table">
-  <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
-  <tbody>
-    {% for i in order.items.all %}
-    <tr><td>{{ i.product_name }}</td><td>{{ i.quantity }}</td><td>${{ i.unit_price }}</td><td>${{ i.subtotal }}</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
-<h5>Shipping</h5>
-<p>{{ order.shipping.full_name }} | {{ order.shipping.phone }}<br>
-   {{ order.shipping.address }}, {{ order.shipping.city }}</p>
+<div class="row g-4">
+  <div class="col-xl-8">
+    <div class="panel">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Item</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Subtotal</th></tr></thead>
+          <tbody>
+            {% for i in order.items.all %}
+            <tr><td>{{ i.product_name }}</td><td class="num">{{ i.quantity }}</td><td class="num">${{ i.unit_price }}</td><td class="num">${{ i.subtotal }}</td></tr>
+            {% endfor %}
+          </tbody>
+          <tfoot><tr><td colspan="3" class="num"><strong>Total</strong></td><td class="num"><strong>${{ order.total_amount }}</strong></td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-4">
+    <div class="panel panel-pad mb-3">
+      <h2 class="panel-title">Status</h2>
+      <p><span class="status status-{{ order.status }}">{{ order.get_status_display }}</span></p>
+      <dl class="kv mb-3"><dt>Customer</dt><dd>{{ order.user.username }}</dd><dt>Placed</dt><dd>{{ order.created_at|date:"M d, Y" }}</dd></dl>
+      <a href="{% url 'dashboard:order_status_update' order.order_number %}" class="btn btn-primary w-100">Update status</a>
+    </div>
+    <div class="panel panel-pad">
+      <h2 class="panel-title">Delivery address</h2>
+      <p class="mb-0">{{ order.shipping.full_name }}<br>{{ order.shipping.phone }}<br>{{ order.shipping.address }}, {{ order.shipping.city }}</p>
+    </div>
+  </div>
+</div>
+<a href="{% url 'dashboard:order_list' %}" class="btn btn-outline-secondary mt-3"><i class="bi bi-arrow-left me-2"></i>All orders</a>
 {% endblock %}

@@ -5,7 +5,7 @@ from .models import Product, Category
 
 
 def home(request):
-    featured = Product.objects.filter(is_active=True)[:8]
+    featured = Product.objects.filter(is_active=True).select_related('category')[:12]
     categories = Category.objects.all()
     return render(request, 'home.html', {'featured': featured, 'categories': categories})
 
@@ -26,7 +26,10 @@ def product_list(request):
     paginator = Paginator(products, 12)
     page = request.GET.get('page')
     products = paginator.get_page(page)
+    params = request.GET.copy()
+    params.pop('page', None)
     return render(request, 'store/product_list.html', {
+        'querystring': params.urlencode(),
         'products': products,
         'categories': categories,
         'query': query,

@@ -1,25 +1,39 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
-    <a class="navbar-brand" href="{% url 'store:home' %}">ShopEase</a>
-    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navmain"><span class="navbar-toggler-icon"></span></button>
-    <div class="collapse navbar-collapse" id="navmain">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a class="nav-link" href="{% url 'store:product_list' %}">Shop</a></li>
-      </ul>
-      <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" href="{% url 'cart:detail' %}">Cart ({{ cart.count|default:0 }})</a></li>
-        {% if user.is_authenticated %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'orders:order_history' %}">My Orders</a></li>
-          {% if user.is_staff or user.role == 'admin' %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Dashboard</a></li>
+<header class="site-nav">
+  <nav class="navbar navbar-expand-lg" aria-label="Main">
+    <div class="container">
+      <a class="brand" href="{% url 'store:home' %}"><span class="brand-mark"><i class="bi bi-bag-heart-fill"></i></span>ShopEase</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmain" aria-controls="navmain" aria-expanded="false" aria-label="Toggle menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navmain">
+        <ul class="navbar-nav mx-lg-auto">
+          <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'store:home' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'product_list' %}active{% endif %}" href="{% url 'store:product_list' %}">Shop</a></li>
+          {% if user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'orders:order_history' %}">My orders</a></li>
+            {% if user.is_staff or user.role == 'admin' %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Dashboard</a></li>
+            {% endif %}
           {% endif %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'accounts:profile' %}">{{ user.username }}</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a></li>
-        {% else %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Login</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'accounts:register' %}">Register</a></li>
-        {% endif %}
-      </ul>
+        </ul>
+        <div class="nav-actions d-flex flex-column flex-lg-row align-items-lg-center gap-2 mt-3 mt-lg-0">
+          <form class="nav-search" action="{% url 'store:product_list' %}" method="get" role="search">
+            <i class="bi bi-search"></i>
+            <label class="visually-hidden" for="nav-q">Search products</label>
+            <input id="nav-q" type="search" name="q" class="form-control form-control-sm" placeholder="Search products">
+          </form>
+          <a class="nav-link" href="{% url 'cart:detail' %}" aria-label="Cart">
+            <i class="bi bi-bag"></i> Cart<span class="cart-count">{{ cart.count|default:0 }}</span>
+          </a>
+          {% if user.is_authenticated %}
+            <a class="nav-link" href="{% url 'accounts:profile' %}"><i class="bi bi-person-circle"></i> {{ user.username }}</a>
+            <a class="btn btn-outline-primary btn-sm" href="{% url 'accounts:logout' %}">Log out</a>
+          {% else %}
+            <a class="btn btn-outline-primary btn-sm" href="{% url 'accounts:login' %}">Log in</a>
+            <a class="btn btn-primary btn-sm" href="{% url 'accounts:register' %}">Sign up</a>
+          {% endif %}
+        </div>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
+</header>

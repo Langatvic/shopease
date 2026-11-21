@@ -1,35 +1,45 @@
 {% extends 'base.html' %}
-{% block title %}Products{% endblock %}
+{% block title %}{% if query %}Results for "{{ query }}"{% else %}Shop{% endif %} | ShopEase{% endblock %}
 {% block content %}
-<div class="row">
-  <aside class="col-md-3 mb-4">
-    <h5>Categories</h5>
-    <ul class="list-group">
-      <li class="list-group-item {% if not selected_category %}active{% endif %}">
-        <a class="stretched-link text-decoration-none" href="{% url 'store:product_list' %}">All</a>
-      </li>
-      {% for cat in categories %}
-        <li class="list-group-item {% if selected_category == cat.slug %}active{% endif %}">
-          <a class="stretched-link text-decoration-none" href="?category={{ cat.slug }}">{{ cat.name }}</a>
-        </li>
-      {% endfor %}
-    </ul>
-  </aside>
-  <section class="col-md-9">
-    <form class="mb-4 d-flex" method="get">
-      <input type="text" name="q" value="{{ query }}" class="form-control me-2" placeholder="Search products...">
-      <button class="btn btn-outline-primary">Search</button>
-    </form>
-    <div class="row g-3">
-      {% for product in products %}
-        <div class="col-sm-6 col-lg-4">
-          {% include 'includes/product_card.html' %}
-        </div>
-      {% empty %}
-        <p>No products found.</p>
-      {% endfor %}
+<div class="page-head">
+  <h1>{% if query %}Results for "{{ query }}"{% else %}Shop{% endif %}</h1>
+  <p>{{ products.paginator.count }} product{{ products.paginator.count|pluralize }}</p>
+</div>
+<div class="row g-4">
+  <aside class="col-lg-3">
+    <div class="filter-card">
+      <h2 class="filter-title">Categories</h2>
+      <nav class="filter-list" aria-label="Categories">
+        <a class="{% if not selected_category %}is-active{% endif %}" href="{% url 'store:product_list' %}{% if query %}?q={{ query|urlencode }}{% endif %}">All products</a>
+        {% for cat in categories %}
+          <a class="{% if selected_category == cat.slug %}is-active{% endif %}" href="?category={{ cat.slug }}{% if query %}&amp;q={{ query|urlencode }}{% endif %}">{{ cat.name }}</a>
+        {% endfor %}
+      </nav>
     </div>
-    {% include 'includes/pagination.html' with page_obj=products %}
+  </aside>
+  <section class="col-lg-9">
+    <form class="search-bar" method="get" role="search">
+      <i class="bi bi-search"></i>
+      <label class="visually-hidden" for="shop-q">Search products</label>
+      <input id="shop-q" type="search" name="q" value="{{ query }}" class="form-control" placeholder="Search products">
+      {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+      <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+    {% if products %}
+      <div class="row g-3 g-lg-4">
+        {% for product in products %}
+          <div class="col-6 col-md-4">{% include 'includes/product_card.html' %}</div>
+        {% endfor %}
+      </div>
+      {% include 'includes/pagination.html' with page_obj=products %}
+    {% else %}
+      <div class="empty">
+        <i class="bi bi-search"></i>
+        <h2>No products found</h2>
+        <p>Try a different search, or look through all products.</p>
+        <a href="{% url 'store:product_list' %}" class="btn btn-primary">View all products</a>
+      </div>
+    {% endif %}
   </section>
 </div>
 {% endblock %}

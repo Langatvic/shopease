@@ -1,13 +1,19 @@
 {% extends 'base.html' %}
+{% block title %}Payment method | ShopEase{% endblock %}
 {% block content %}
-<h2>Payment Method</h2>
-<p>Order <strong>{{ order.order_number }}</strong> — Total ${{ order.total_amount }}</p>
-<form method="post">
-  {% csrf_token %}
-  <div class="form-check">
-    <input class="form-check-input" type="radio" name="method" value="cod" id="cod" checked>
-    <label class="form-check-label" for="cod">Cash on Delivery</label>
-  </div>
-  <button class="btn btn-primary mt-3">Confirm</button>
-</form>
+<div class="notice" style="text-align:left;">
+  <div class="page-head"><h1>Payment method</h1><p>Order <strong>{{ order.order_number }}</strong> &middot; Total ${{ order.total_amount }}</p></div>
+  <form method="post">
+    {% csrf_token %}
+    <label class="option-card" for="cod">
+      <input class="form-check-input mt-1" type="radio" name="method" value="cod" id="cod" checked>
+      <span><strong>Cash on delivery</strong><small>Pay in cash when your order arrives.</small></span>
+    </label>
+    <label class="option-card is-disabled" for="mpesa">
+      <input class="form-check-input mt-1" type="radio" name="method" value="mpesa" id="mpesa" disabled>
+      <span><strong>M-Pesa <span class="soon">Coming soon</span></strong><small>Pay with a prompt on your phone.</small></span>
+    </label>
+    <button class="btn btn-primary btn-lg w-100 mt-3" type="submit">Confirm</button>
+  </form>
+</div>
 {% endblock %}

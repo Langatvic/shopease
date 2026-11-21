@@ -1,13 +1,27 @@
 {% extends 'base.html' %}
-{% block title %}{{ category.name }}{% endblock %}
+{% block title %}{{ category.name }} | ShopEase{% endblock %}
 {% block content %}
-<h2>{{ category.name }}</h2>
-<p>{{ category.description }}</p>
-<div class="row g-3">
-  {% for product in products %}
-    <div class="col-sm-6 col-lg-3">{% include 'includes/product_card.html' %}</div>
-  {% empty %}
-    <p>No products in this category.</p>
-  {% endfor %}
+<nav class="crumbs" aria-label="Breadcrumb">
+  <a href="{% url 'store:home' %}">Home</a><i class="bi bi-chevron-right"></i>
+  <a href="{% url 'store:product_list' %}">Shop</a><i class="bi bi-chevron-right"></i>
+  <span aria-current="page">{{ category.name }}</span>
+</nav>
+<div class="page-head">
+  <h1>{{ category.name }}</h1>
+  {% if category.description %}<p>{{ category.description }}</p>{% endif %}
 </div>
+{% if products %}
+  <div class="row g-3 g-lg-4">
+    {% for product in products %}
+      <div class="col-6 col-md-4 col-lg-3">{% include 'includes/product_card.html' %}</div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty">
+    <i class="bi bi-box-seam"></i>
+    <h2>Nothing here yet</h2>
+    <p>There are no products in this category right now.</p>
+    <a href="{% url 'store:product_list' %}" class="btn btn-primary">Browse all products</a>
+  </div>
+{% endif %}
 {% endblock %}

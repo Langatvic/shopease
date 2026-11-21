@@ -1,4 +1,10 @@
 {% extends 'base.html' %}
+{% block title %}M-Pesa | ShopEase{% endblock %}
 {% block content %}
-<div class="alert alert-warning">M-Pesa integration coming soon.</div>
+<div class="notice">
+  <div class="notice-icon warn"><i class="bi bi-phone"></i></div>
+  <h1>M-Pesa is coming soon</h1>
+  <p>Paying with M-Pesa is not available yet. You can pay in cash when your order arrives.</p>
+  <a href="{% url 'orders:order_detail' order.order_number %}" class="btn btn-primary mt-3">Back to my order</a>
+</div>
 {% endblock %}

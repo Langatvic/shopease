@@ -1,15 +1,26 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}My Profile{% endblock %}
+{% block title %}My profile | ShopEase{% endblock %}
 {% block content %}
-<h3>My Profile</h3>
-<div class="card shadow-sm">
-  <div class="card-body">
-    <form method="post" novalidate>
-      {% csrf_token %}
-      {{ form|crispy }}
-      <button class="btn btn-primary" type="submit">Save Changes</button>
-    </form>
+<div class="page-head"><h1>My profile</h1><p>Keep your delivery details up to date.</p></div>
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="panel panel-pad text-center">
+      <div class="avatar">{{ user.username|slice:":1"|upper }}</div>
+      <h2 class="panel-title mb-1">{{ user.username }}</h2>
+      {% if user.email %}<p class="muted mb-3">{{ user.email }}</p>{% endif %}
+      <a href="{% url 'orders:order_history' %}" class="btn btn-outline-primary w-100">My orders</a>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="panel panel-pad">
+      <h2 class="panel-title">Personal details</h2>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-primary" type="submit">Save changes</button>
+      </form>
+    </div>
   </div>
 </div>
 {% endblock %}

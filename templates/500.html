@@ -1,2 +1,10 @@
 {% extends 'base.html' %}
-{% block content %}<div class="text-center"><h1>500</h1><p>Something went wrong.</p></div>{% endblock %}
+{% block title %}Something went wrong | ShopEase{% endblock %}
+{% block content %}
+<div class="notice">
+  <div class="error-code">500</div>
+  <h1 class="mt-3">Something went wrong</h1>
+  <p>This is on our side. Please try again in a moment.</p>
+  <a href="/" class="btn btn-primary mt-3">Go to the home page</a>
+</div>
+{% endblock %}
