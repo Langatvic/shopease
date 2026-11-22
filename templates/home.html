@@ -7,26 +7,36 @@
   <section class="hero">
     <div class="container">
       <div class="row align-items-center g-5">
-        <div class="col-lg-7">
-          <h1>Quality products, delivered to your door.</h1>
-          <p class="lead mt-3">Browse the catalogue, order in a few clicks, and pay in cash when it arrives.</p>
-          <form class="hero-search" action="{% url 'store:product_list' %}" method="get" role="search">
-            <label class="visually-hidden" for="hero-q">Search products</label>
-            <input id="hero-q" type="search" name="q" placeholder="What are you looking for?">
-            <button class="btn btn-accent" type="submit">Search</button>
-          </form>
-          {% if categories %}
-          <div class="hero-links">
-            {% for c in categories|slice:":5" %}
-              <a class="hero-chip" href="{% url 'store:product_list' %}?category={{ c.slug }}">{{ c.name }}</a>
-            {% endfor %}
-          </div>
-          {% endif %}
+        <div class="col-lg-6">
+                  <div class="hero-eyebrow">
+          <span></span> YOUR EVERYDAY SHOPPING DESTINATION
         </div>
-        <div class="col-lg-5">
+
+        <h1>Good finds.<br><span>Better prices.</span></h1>
+
+        <p class="hero-copy">
+          Discover quality products, enjoy a simple shopping experience
+          and get your order delivered right to your doorstep.
+          Shop with confidence and pay when it arrives.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-shop" href="{% url 'store:product_list' %}">
+            Explore products <i class="bi bi-arrow-right"></i>
+          </a>
+          <span class="hero-note">
+            <i class="bi bi-shield-check"></i> Easy and convenient shopping
+          </span>
+        </div>
+          <svg class="hero-doodle" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
+            <path d="M18 12 L14 30 M18 12 L34 22" />
+            <path d="M16 14 C6 44 30 74 52 60 C70 48 50 30 36 46 C26 58 46 74 78 62 C96 54 104 40 108 26" />
+          </svg>
+        </div>
+        <div class="col-lg-6">
           {% with p=featured.0 %}
           <div class="hero-visual">
-            <div class="hero-frame">
+            <div class="hero-stage">
               {% if p.image %}
                 <img src="{{ p.image.url }}" alt="{{ p.name }}">
               {% else %}
@@ -34,10 +44,10 @@
               {% endif %}
             </div>
             {% if p %}
-            <a class="hero-tag text-decoration-none" href="{% url 'store:product_detail' p.slug %}">
-              <small>Featured</small>
+            <a class="hero-card text-decoration-none" href="{% url 'store:product_detail' p.slug %}">
               <strong>{{ p.name }}</strong>
-              <span class="price">${{ p.price }}</span>
+              <span>{% if p.description %}{{ p.description|truncatewords:18 }}{% else %}{{ p.category.name }}{% endif %}</span>
+              <em>${{ p.price }}</em>
             </a>
             {% endif %}
           </div>
@@ -47,32 +57,43 @@
     </div>
   </section>
 
-  <section class="section why">
+  <section class="trust" aria-label="Why shop with us">
     <div class="container">
-      <h2 class="section-title mb-5">Why shop with us</h2>
-      <div class="row g-4">
-        <div class="col-md-4 why-item">
-          <div class="why-icon"><i class="bi bi-cash-coin"></i></div>
-          <h3>Pay when it arrives</h3>
-          <p>Cash on delivery means you only pay once your order reaches you. M-Pesa is coming soon.</p>
-        </div>
-        <div class="col-md-4 why-item">
-          <div class="why-icon"><i class="bi bi-box-seam"></i></div>
-          <h3>Stock you can trust</h3>
-          <p>Availability is updated as items sell, so what you add to your cart is what we have.</p>
-        </div>
-        <div class="col-md-4 why-item">
-          <div class="why-icon"><i class="bi bi-receipt"></i></div>
-          <h3>Every order, in one place</h3>
-          <p>See your past orders and their current status any time from your account.</p>
-        </div>
-      </div>
+      <ul class="trust-strip">
+        <li><i class="bi bi-cash-coin"></i><span><strong>Cash on delivery</strong>Pay when it arrives</span></li>
+        <li><i class="bi bi-box-seam"></i><span><strong>Live stock</strong>Updated as items sell</span></li>
+        <li><i class="bi bi-receipt"></i><span><strong>Order history</strong>Track every order</span></li>
+        <li><i class="bi bi-phone"></i><span><strong>Pay with M-Pesa</strong>Prompt straight to your phone</span></li>
+      </ul>
     </div>
   </section>
 
+  {% if categories %}
+  <section class="section pb-0">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">Shop by category</h2>
+        <a class="link-more" href="{% url 'store:product_list' %}">View all</a>
+      </div>
+      <div class="row g-3">
+        {% for c in categories|slice:":4" %}
+        <div class="col-6 col-lg-3">
+          <a class="cat-tile" href="{% url 'store:product_list' %}?category={{ c.slug }}">
+            {% if c.image %}<img src="{{ c.image.url }}" alt="" loading="lazy">{% endif %}
+            <span>{{ c.name }}</span>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
   <section class="section">
     <div class="container">
-      <h2 class="section-title text-center mb-4">Featured products</h2>
+      <div class="section-head">
+        <h2 class="section-title">Featured products</h2>
+      </div>
       {% if featured %}
         <div class="tabs" data-filter-tabs="#featured-grid">
           <button type="button" class="tab-btn is-active" data-filter="all" aria-pressed="true">All</button>

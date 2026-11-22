@@ -1,21 +1,98 @@
+
 {% extends 'base.html' %}
+
 {% block body_class %}auth-page{% endblock %}
+{% block flash %}{% endblock %}
 {% block navbar %}{% endblock %}
 {% block footer %}{% endblock %}
+
 {% block main %}
+
 <main class="auth">
-  <section class="auth-form-side">
-    <div class="auth-form-wrap">
-      <a class="brand" href="{% url 'store:home' %}"><span class="brand-mark"><i class="bi bi-bag-heart-fill"></i></span>ShopEase</a>
-      {% block auth_content %}{% endblock %}
-      <p class="auth-foot">&copy; {% now "Y" %} ShopEase. All rights reserved.</p>
-    </div>
-  </section>
-  <aside class="auth-visual" aria-hidden="true">
-    <div class="auth-visual-copy">
-      <h2>Everything you need, delivered.</h2>
-      <p>Create an account to check out faster and keep track of your orders.</p>
-    </div>
-  </aside>
+
+    <!-- LEFT: LOGIN FORM -->
+    <section class="auth-form-side">
+
+        <div class="auth-form-wrap">
+
+            <a class="brand" href="{% url 'store:home' %}">
+                <span class="brand-mark">
+                    <i class="bi bi-bag-heart-fill"></i>
+                </span>
+                <span>ShopEase</span>
+            </a>
+
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} auth-alert" role="alert">{{ message }}</div>
+            {% endfor %}
+
+            {% block auth_content %}{% endblock %}
+
+            <p class="auth-foot">
+                &copy; {% now "Y" %} ShopEase.
+                All rights reserved.
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- RIGHT: PROMOTIONAL PANEL -->
+    <aside class="auth-visual">
+
+        <div class="visual-top">
+            <span class="visual-brand">
+                <i class="bi bi-stars"></i> THE SHOPEASE EXPERIENCE
+            </span>
+
+            <span class="visual-badge">
+                <i class="bi bi-check-circle-fill"></i>
+                Shop with confidence
+            </span>
+        </div>
+
+        <div class="visual-center">
+            <div class="visual-icon">
+                <i class="bi bi-bag-heart-fill"></i>
+            </div>
+
+            <span class="visual-kicker">DISCOVER MORE. LIVE BETTER.</span>
+
+            <h2>
+                Everything you love.
+                <span>One place.</span>
+            </h2>
+
+            <p>
+                Discover exceptional products, enjoy convenient shopping
+                and get everything you need delivered right to your door.
+            </p>
+
+            <div class="visual-features">
+                <div>
+                    <i class="bi bi-truck"></i>
+                    <span>Convenient delivery</span>
+                </div>
+
+                <div>
+                    <i class="bi bi-shield-check"></i>
+                    <span>Secure shopping</span>
+                </div>
+
+                <div>
+                    <i class="bi bi-heart"></i>
+                    <span>Products you'll love</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="visual-bottom">
+            <span>YOUR STYLE. YOUR CHOICE. YOUR SHOPEASE.</span>
+            <i class="bi bi-arrow-up-right"></i>
+        </div>
+
+    </aside>
+
 </main>
+
 {% endblock %}

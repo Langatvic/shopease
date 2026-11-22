@@ -1,10 +1,66 @@
 {% extends 'base.html' %}
-{% block title %}M-Pesa | ShopEase{% endblock %}
+{% block title %}Pay with M-Pesa | ShopEase{% endblock %}
 {% block content %}
-<div class="notice">
-  <div class="notice-icon warn"><i class="bi bi-phone"></i></div>
-  <h1>M-Pesa is coming soon</h1>
-  <p>Paying with M-Pesa is not available yet. You can pay in cash when your order arrives.</p>
-  <a href="{% url 'orders:order_detail' order.order_number %}" class="btn btn-primary mt-3">Back to my order</a>
+<div class="notice" id="mpesa-box" data-status-url="{% url 'payments:mpesa_status' order.order_number %}" data-pending="{% if payment.status == 'pending' and payment.checkout_request_id %}1{% endif %}">
+
+  {% if payment.status == 'paid' %}
+    <div class="notice-icon"><i class="bi bi-check-lg"></i></div>
+    <h1>Payment received</h1>
+    <p>Thank you. We received your M-Pesa payment for order <strong>{{ order.order_number }}</strong>{% if payment.transaction_ref %} (receipt <strong>{{ payment.transaction_ref }}</strong>){% endif %}.</p>
+    <a href="{% url 'orders:order_detail' order.order_number %}" class="btn btn-primary mt-3">View order</a>
+
+  {% elif payment.status == 'pending' and payment.checkout_request_id %}
+    <div class="notice-icon info"><i class="bi bi-phone-vibrate"></i></div>
+    <h1 id="mpesa-title">Check your phone</h1>
+    <p id="mpesa-text">We sent a prompt to <strong>{{ payment.phone }}</strong> for <strong>KES {{ payment.amount|floatformat:0 }}</strong>. Enter your M-Pesa PIN to finish paying. This page updates by itself.</p>
+    <div class="spinner-border text-secondary" id="mpesa-spinner" role="status"><span class="visually-hidden">Waiting for payment</span></div>
+    <details class="mt-4 text-start">
+      <summary class="muted small">Did not get a prompt?</summary>
+      <form method="post" class="mt-3">
+        {% csrf_token %}
+        <label class="form-label" for="phone">M-Pesa number</label>
+        <input class="form-control mb-2" id="phone" name="phone" inputmode="tel" value="{{ phone }}" required>
+        <button class="btn btn-outline-primary w-100" type="submit">Send the prompt again</button>
+      </form>
+    </details>
+
+  {% else %}
+    <div class="notice-icon {% if payment.status == 'failed' %}warn{% else %}info{% endif %}"><i class="bi bi-phone"></i></div>
+    <h1>{% if payment.status == 'failed' %}Payment did not go through{% else %}Pay with M-Pesa{% endif %}</h1>
+    <p>{% if payment.status == 'failed' %}{{ payment.result_desc|default:"The payment was not completed." }} You can try again below.{% else %}Order <strong>{{ order.order_number }}</strong> &middot; KES {{ order.total_amount|floatformat:0 }}. We will send a prompt to your phone.{% endif %}</p>
+    <form method="post" class="text-start">
+      {% csrf_token %}
+      <label class="form-label" for="phone">M-Pesa number</label>
+      <input class="form-control mb-3" id="phone" name="phone" inputmode="tel" placeholder="0712 345 678" value="{{ phone }}" required>
+      <button class="btn btn-primary btn-lg w-100" type="submit">Send payment prompt</button>
+    </form>
+    <p class="mt-3 mb-0"><a href="{% url 'orders:order_detail' order.order_number %}" class="muted small">Pay cash on delivery instead</a></p>
+  {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  var box = document.getElementById('mpesa-box');
+  if (!box || !box.dataset.pending) return;
+  var tries = 0, maxTries = 40;           // about 3 minutes at one check every 4.5 seconds
+  function check() {
+    fetch(box.dataset.statusUrl, { headers: { 'Accept': 'application/json' }, credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d.status === 'paid' || d.status === 'failed') { window.location.reload(); return; }
+        if (++tries >= maxTries) {
+          document.getElementById('mpesa-spinner').hidden = true;
+          document.getElementById('mpesa-text').textContent =
+            'We have not received a confirmation yet. If you already paid, it will show on your order shortly.';
+          return;
+        }
+        setTimeout(check, 4500);
+      })
+      .catch(function () { if (++tries < maxTries) setTimeout(check, 6000); });
+  }
+  setTimeout(check, 4500);
+})();
+</script>
 {% endblock %}

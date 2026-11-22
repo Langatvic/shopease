@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block title %}Checkout | ShopEase{% endblock %}
 {% block content %}
-<div class="page-head"><h1>Checkout</h1><p>Tell us where to deliver your order.</p></div>
+<div class="page-head"><h1>Checkout</h1><p>Tell us where to deliver your order and how you would like to pay.</p></div>
 <div class="row g-4">
   <div class="col-lg-7">
     <div class="panel panel-pad">
@@ -24,7 +24,7 @@
         </div>
       {% endfor %}
       <div class="summary-line summary-total"><span>Total</span><span>${{ cart.total }}</span></div>
-      <p class="muted small mt-3 mb-0"><i class="bi bi-cash-coin me-2"></i>You pay in cash when your order arrives.</p>
+      <p class="muted small mt-3 mb-0"><i class="bi bi-shield-check me-2"></i>Choose M-Pesa to pay now, or cash when your order arrives.</p>
     </div>
   </div>
 </div>

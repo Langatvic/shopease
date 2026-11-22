@@ -16,6 +16,9 @@ staticfiles/
 
 # Environment variables
 .env
+.env.*
+!.env.example
+!.env.mpesa.example
 
 # Media uploads
 media/

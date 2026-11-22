@@ -12,6 +12,7 @@ urlpatterns = [
     path('products/<int:pk>/delete/', views.product_delete, name='product_delete'),
 
     path('categories/', views.category_list, name='category_list'),
+    path('categories/create/', views.category_create_ajax,     name='category_create_ajax'),
 
     path('orders/', views.order_list, name='order_list'),
     path('orders/<str:order_number>/', views.order_detail, name='order_detail'),

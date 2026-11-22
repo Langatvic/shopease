@@ -56,3 +56,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
   });
 });
+
+// Announcement bar: dismiss for the rest of the browser session
+document.addEventListener('DOMContentLoaded', () => {
+  const bar = document.getElementById('announce');
+  const close = document.getElementById('announce-close');
+  if (!bar || !close) return;
+  try { if (sessionStorage.getItem('announce-closed')) bar.hidden = true; } catch (e) {}
+  close.addEventListener('click', () => {
+    bar.hidden = true;
+    try { sessionStorage.setItem('announce-closed', '1'); } catch (e) {}
+  });
+});

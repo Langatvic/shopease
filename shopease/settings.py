@@ -51,6 +51,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart',
+                'store.context_processors.nav_categories',
             ],
         },
     },
@@ -103,3 +104,20 @@ LOGIN_REDIRECT_URL = 'store:home'
 LOGOUT_REDIRECT_URL = 'store:home'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# ---- M-Pesa (Safaricom Daraja STK Push) ----
+MPESA_ENV = config('MPESA_ENV', default='sandbox')  # 'sandbox' or 'production'
+MPESA_CONSUMER_KEY = config('MPESA_CONSUMER_KEY', default='')
+MPESA_CONSUMER_SECRET = config('MPESA_CONSUMER_SECRET', default='')
+MPESA_SHORTCODE = config('MPESA_SHORTCODE', default='')
+MPESA_PASSKEY = config('MPESA_PASSKEY', default='')
+# Must be a public https URL, e.g. https://abc123.ngrok-free.app/payments/mpesa/callback/<MPESA_CALLBACK_TOKEN>/
+MPESA_CALLBACK_URL = config('MPESA_CALLBACK_URL', default='')
+MPESA_CALLBACK_TOKEN = config('MPESA_CALLBACK_TOKEN', default='')  # long random string, also part of the URL above
+MPESA_TRANSACTION_TYPE = config('MPESA_TRANSACTION_TYPE', default='CustomerPayBillOnline')  # Till: CustomerBuyGoodsOnline
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in config('CSRF_TRUSTED_ORIGINS', default='').split(',')
+    if origin.strip()
+]

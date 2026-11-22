@@ -33,6 +33,15 @@
       <h2 class="panel-title">Order details</h2>
       <dl class="kv"><dt>Placed</dt><dd>{{ order.created_at|date:"M d, Y" }}</dd><dt>Status</dt><dd>{{ order.get_status_display }}</dd></dl>
     </div>
+    {% if order.payment %}
+    <div class="panel panel-pad mb-3">
+      <h2 class="panel-title">Payment</h2>
+      <dl class="kv"><dt>Method</dt><dd>{{ order.payment.get_method_display }}</dd><dt>Status</dt><dd><span class="status status-{% if order.payment.status == 'paid' %}ok{% elif order.payment.status == 'failed' %}cancelled{% else %}pending{% endif %}">{{ order.payment.get_status_display }}</span></dd>{% if order.payment.transaction_ref %}<dt>Receipt</dt><dd>{{ order.payment.transaction_ref }}</dd>{% endif %}</dl>
+      {% if order.payment.method == 'mpesa' and order.payment.status != 'paid' and order.status != 'cancelled' %}
+        <a href="{% url 'payments:mpesa_stkpush' order.order_number %}" class="btn btn-primary w-100 mt-3">Pay with M-Pesa</a>
+      {% endif %}
+    </div>
+    {% endif %}
     <div class="panel panel-pad">
       <h2 class="panel-title">Delivery address</h2>
       <p class="mb-0">{{ order.shipping.full_name }}<br>{{ order.shipping.phone }}<br>{{ order.shipping.address }}<br>{{ order.shipping.city }}</p>

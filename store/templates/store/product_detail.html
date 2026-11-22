@@ -40,18 +40,41 @@
     {% endif %}
     {% if product.description %}<p class="detail-desc">{{ product.description|linebreaksbr }}</p>{% endif %}
 
-    <form method="post" action="{% url 'cart:add' product.id %}" class="mt-4">
-      {% csrf_token %}
-      <div class="buy-row">
-        <label class="visually-hidden" for="qty">Quantity</label>
-        <input id="qty" type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control qty" {% if not product.in_stock %}disabled{% endif %}>
-        <button class="btn btn-primary btn-lg" type="submit" {% if not product.in_stock %}disabled{% endif %}><i class="bi bi-bag-plus me-2"></i>Add to cart</button>
-      </div>
-    </form>
+    
+      {% if not user.is_authenticated or user.role == 'customer' and not user.is_staff and not user.is_superuser %}
+
+      <form method="post" action="{% url 'cart:add' product.id %}" class="mt-4">
+          {% csrf_token %}
+          <div class="buy-row">
+              <label class="form-label" for="qty">Quantity</label>
+
+              <input
+                  id="qty"
+                  type="number"
+                  name="quantity"
+                  value="1"
+                  min="1"
+                  max="{{ product.stock }}"
+                  class="form-control qty"
+                  {% if not product.in_stock %}disabled{% endif %}
+              >
+
+              <button
+                  class="btn btn-primary btn-lg"
+                  type="submit"
+                  {% if not product.in_stock %}disabled{% endif %}
+              >
+                  <i class="bi bi-bag-plus me-2"></i>
+                  Add to cart
+              </button>
+          </div>
+      </form>
+
+      {% endif %}
 
     <ul class="perks">
       <li><i class="bi bi-truck"></i>Delivered to your door</li>
-      <li><i class="bi bi-cash-coin"></i>Pay in cash when it arrives</li>
+      <li><i class="bi bi-cash-coin"></i>Pay with M-Pesa or in cash on delivery</li>
     </ul>
   </div>
 </div>

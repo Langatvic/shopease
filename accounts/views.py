@@ -32,6 +32,10 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, f'Welcome back, {user.username}!')
+
+            if user.is_staff or user.is_superuser:
+                return redirect('dashboard:index')
+
             return redirect('store:home')
         messages.error(request, 'Invalid username or password.')
     return render(request, 'accounts/login.html')
